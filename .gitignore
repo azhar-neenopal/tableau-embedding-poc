@@ -1,0 +1,25 @@
+# Operating System files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Claude
+.claude/
+
+# Code Editor configurations
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp
+
+# Local environment variables / Secrets
+.env
+*.local
+
+# CSS Preprocessors & Build tools (uncomment if you use Sass, Less, or Vite)
+.sass-cache/
+dist/
+build/

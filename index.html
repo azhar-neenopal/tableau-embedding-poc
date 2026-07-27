@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>BTP Insights Platform Portal</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  :root { color-scheme: light; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+  .tracking-tightish { letter-spacing: 0.01em; }
+  .nav-item {
+    position: relative;
+    padding-left: 1rem;
+  }
+  .nav-item.active { color: #ffffff; font-weight: 700; }
+  .nav-item.active::before {
+    content: "";
+    position: absolute;
+    left: 0; top: 2px; bottom: 2px;
+    width: 2px;
+    background: #ffffff;
+  }
+  .nav-item:not(.active) { color: #8a8a8a; }
+  .nav-item:not(.active):hover { color: #d4d4d4; }
+  .seg-btn { transition: background-color .15s ease, color .15s ease; }
+
+  /* seamless iframe */
+  .report-frame {
+    width: 100%;
+    height: 100%;
+    border: 0;
+    display: block;
+    background: #faf9f5;
+  }
+  .frame-shell {
+    background: #faf9f5;
+  }
+
+  ::-webkit-scrollbar { width: 10px; height: 10px; }
+  ::-webkit-scrollbar-thumb { background: #d8d6cf; border-radius: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+</style>
+</head>
+<body class="bg-[#eeece6] text-black">
+
+<div class="flex h-screen w-screen overflow-hidden">
+
+  <!-- ============ SIDEBAR ============ -->
+  <aside class="w-[260px] shrink-0 bg-black text-white flex flex-col h-full">
+    <div class="px-6 pt-8 pb-6">
+      <div class="flex items-center gap-2 mb-8">
+        <span class="italic text-2xl" style="font-family: Georgia, 'Times New Roman', serif;">Be</span>
+        <span class="text-[13px] font-extrabold tracking-widest uppercase leading-none">The<br/>People</span>
+      </div>
+      <h1 class="text-[15px] font-extrabold uppercase tracking-tight leading-snug">
+        Insights Platform Portal
+      </h1>
+    </div>
+
+    <!-- Reports / Measures toggle -->
+    <div class="px-6 mb-7">
+      <div class="grid grid-cols-2 rounded-md overflow-hidden border border-white/15 text-[12px] font-bold uppercase tracking-wide">
+        <button id="tab-reports" onclick="setSection('reports')" class="seg-btn py-2 uppercase"></button>
+        <button id="tab-measures" onclick="setSection('measures')" class="seg-btn py-2 uppercase"></button>
+      </div>
+    </div>
+
+    <!-- Categories -->
+    <div id="categories-block" class="px-6">
+      <div class="text-[10px] font-bold uppercase tracking-widest text-[#6b6b6b] mb-3">Categories</div>
+      <nav class="flex flex-col gap-4 text-[13px] font-bold uppercase tracking-wide">
+        <a href="#" onclick="setCategory('general');return false;" data-cat="general" class="nav-item">General</a>
+        <a href="#" onclick="setCategory('social');return false;" data-cat="social" class="nav-item">Social</a>
+        <a href="#" onclick="setCategory('campaign');return false;" data-cat="campaign" class="nav-item">Campaign</a>
+        <a href="#" onclick="setCategory('product');return false;" data-cat="product" class="nav-item">Product</a>
+      </nav>
+    </div>
+
+    <div class="flex-1"></div>
+
+    <div class="px-6 pb-6 flex items-center gap-2 text-[11px] text-[#8a8a8a]">
+      <span class="w-1.5 h-1.5 rounded-full bg-[#8a8a8a] inline-block"></span>
+      <span class="uppercase tracking-wide">Signed in &middot; Okta</span>
+    </div>
+  </aside>
+
+  <!-- ============ MAIN ============ -->
+  <main class="flex-1 h-full flex flex-col overflow-hidden">
+
+    <!-- Reports > General is a full-bleed seamless iframe, no chrome around it -->
+    <div id="view-general" class="flex-1 min-h-0 frame-shell relative">
+      <div id="frame-loader" class="absolute inset-0 flex items-center justify-center bg-[#faf9f5]">
+        <div class="flex flex-col items-center gap-3">
+          <div class="w-8 h-8 border-2 border-black/10 border-t-black rounded-full animate-spin"></div>
+          <span class="text-[11px] uppercase tracking-widest text-black/40 font-semibold">Loading report&hellip;</span>
+        </div>
+      </div>
+      <iframe
+        id="report-iframe"
+        class="report-frame"
+        src="https://btp-bythenumbers5.netlify.app/"
+        title="By The Numbers report"
+        onload="document.getElementById('frame-loader').style.display='none'"
+        loading="eager"
+        referrerpolicy="no-referrer-when-downgrade"
+      ></iframe>
+    </div>
+
+    <!-- All other views share the standard padded header/content chrome -->
+    <div id="view-chrome" class="flex-1 min-h-0 overflow-y-auto hidden">
+      <div class="max-w-6xl mx-auto px-10 py-9">
+        <div class="text-[11px] font-bold uppercase tracking-widest text-black/40 mb-1" id="crumb">BTP Insights Platform</div>
+        <h2 class="text-[34px] font-extrabold uppercase tracking-tight mb-8" id="page-title">Reports</h2>
+        <div id="page-body"></div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script>
+  const state = { section: 'reports', category: 'general' };
+
+  const reportCards = {
+    social: [
+      { title: 'Followers', desc: 'Follower growth across all channels.', icon: 'bars' },
+      { title: 'Paid Social', desc: 'Paid social spend, reach and conversions.', icon: 'line' },
+      { title: 'Organic Social Posts', desc: 'Post-level organic performance.', icon: 'ring' },
+    ],
+    campaign: [
+      { title: 'Campaign Performance', desc: 'Reach, spend and conversions by campaign.', icon: 'bars' },
+      { title: 'Email Engagement', desc: 'Open, click and conversion rates.', icon: 'line' },
+      { title: 'Landing Pages', desc: 'Traffic and conversion by landing page.', icon: 'ring' },
+    ],
+    product: [
+      { title: 'Product Signups', desc: 'New product signups over time.', icon: 'bars' },
+      { title: 'Feature Adoption', desc: 'Usage trends across key features.', icon: 'line' },
+      { title: 'Retention', desc: 'Cohort retention and churn.', icon: 'ring' },
+    ],
+  };
+
+  const measures = [
+    { label: 'Followers', value: '312.4K', delta: '4.1K this week' },
+    { label: 'Reach', value: '8.4M', delta: '1.1M this week' },
+    { label: 'Impressions', value: '22.6M', delta: '3.2M this week' },
+    { label: 'Engagements', value: '1.1M', delta: '180K this week' },
+    { label: 'Website Visits', value: '48.9K', delta: '6.2K this week' },
+    { label: 'Newsletter Only Sign Ups', value: '6,210', delta: '420 this week' },
+    { label: 'Product Only Signups', value: '4,880', delta: '360 this week' },
+    { label: 'Total Users', value: '27,110', delta: '1,340 this week' },
+  ];
+
+  function icon(name) {
+    if (name === 'bars') {
+      return `<svg viewBox="0 0 100 60" class="w-full h-16"><rect x="6" y="30" width="12" height="24" fill="black"/><rect x="24" y="20" width="12" height="34" fill="black"/><rect x="42" y="10" width="12" height="44" fill="black"/><rect x="60" y="24" width="12" height="30" fill="black"/><rect x="78" y="4" width="12" height="50" fill="black"/></svg>`;
+    }
+    if (name === 'line') {
+      return `<svg viewBox="0 0 100 60" class="w-full h-16"><polyline points="6,44 26,30 46,36 66,14 90,6" fill="none" stroke="black" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="26" cy="30" r="3" fill="black"/><circle cx="46" cy="36" r="3" fill="black"/><circle cx="66" cy="14" r="3" fill="black"/><circle cx="90" cy="6" r="3" fill="black"/></svg>`;
+    }
+    return `<svg viewBox="0 0 100 60" class="w-full h-16"><circle cx="50" cy="30" r="20" fill="none" stroke="black" stroke-width="9"/></svg>`;
+  }
+
+  function renderReportCards(cat) {
+    const items = reportCards[cat] || [];
+    return `<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+      ${items.map(c => `
+        <div class="bg-white border border-black/10 rounded-md overflow-hidden hover:shadow-sm transition-shadow cursor-pointer">
+          <div class="px-6 pt-6 pb-2">${icon(c.icon)}</div>
+          <div class="px-5 py-4 border-t border-black/10">
+            <div class="text-[13px] font-extrabold uppercase tracking-wide mb-1">${c.title}</div>
+            <div class="text-[13px] text-black/50">${c.desc}</div>
+          </div>
+        </div>
+      `).join('')}
+    </div>`;
+  }
+
+  function renderMeasures() {
+    return `<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+      ${measures.map(m => `
+        <div class="bg-white border border-black/10 rounded-md px-6 py-5">
+          <div class="text-[11px] font-bold uppercase tracking-widest text-black/40 mb-2">${m.label}</div>
+          <div class="text-[30px] font-extrabold tracking-tight mb-1">${m.value}</div>
+          <div class="text-[12px] text-black/45 flex items-center gap-1">
+            <span class="text-black/70">&#9650;</span> ${m.delta}
+          </div>
+        </div>
+      `).join('')}
+    </div>`;
+  }
+
+  function setSection(section) {
+    state.section = section;
+    document.getElementById('categories-block').classList.toggle('opacity-40', section !== 'reports');
+    document.getElementById('categories-block').classList.toggle('pointer-events-none', section !== 'reports');
+    updateToggle();
+    if (section === 'measures') {
+      showChrome('BTP Insights Platform', 'Key Measures', renderMeasures());
+    } else {
+      setCategory(state.category);
+    }
+  }
+
+  function setCategory(cat) {
+    state.category = cat;
+    document.querySelectorAll('[data-cat]').forEach(el => {
+      el.classList.toggle('active', el.dataset.cat === cat);
+    });
+    if (cat === 'general') {
+      document.getElementById('view-general').classList.remove('hidden');
+      document.getElementById('view-chrome').classList.add('hidden');
+    } else {
+      document.getElementById('view-general').classList.add('hidden');
+      showChrome('BTP Insights Platform', 'Reports', renderReportCards(cat));
+    }
+  }
+
+  function showChrome(crumb, title, bodyHtml) {
+    document.getElementById('view-general').classList.add('hidden');
+    document.getElementById('view-chrome').classList.remove('hidden');
+    document.getElementById('crumb').textContent = crumb;
+    document.getElementById('page-title').textContent = title;
+    document.getElementById('page-body').innerHTML = bodyHtml;
+  }
+
+  function updateToggle() {
+    const r = document.getElementById('tab-reports');
+    const m = document.getElementById('tab-measures');
+    r.textContent = 'Reports';
+    m.textContent = 'Measures';
+    if (state.section === 'reports') {
+      r.className = 'seg-btn py-2 uppercase bg-white text-black';
+      m.className = 'seg-btn py-2 uppercase bg-black text-white';
+    } else {
+      r.className = 'seg-btn py-2 uppercase bg-black text-white';
+      m.className = 'seg-btn py-2 uppercase bg-white text-black';
+    }
+  }
+
+  // init
+  updateToggle();
+  setCategory('general');
+</script>
+
+</body>
+</html>
