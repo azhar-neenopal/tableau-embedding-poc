@@ -40,18 +40,51 @@
   ::-webkit-scrollbar { width: 10px; height: 10px; }
   ::-webkit-scrollbar-thumb { background: #d8d6cf; border-radius: 6px; }
   ::-webkit-scrollbar-track { background: transparent; }
+
+  #sidebar { transition: transform .25s ease-in-out; }
+  #sidebar-overlay { transition: opacity .2s ease-in-out; }
 </style>
 </head>
 <body class="bg-[#eeece6] text-black">
 
-<div class="flex h-screen w-screen overflow-hidden">
+<div class="flex h-screen w-screen overflow-hidden relative">
+
+  <!-- overlay for mobile off-canvas sidebar -->
+  <div id="sidebar-overlay" onclick="closeSidebar()" class="hidden fixed inset-0 bg-black/50 z-30 md:hidden"></div>
 
   <!-- ============ SIDEBAR ============ -->
-  <aside class="w-[260px] shrink-0 bg-black text-white flex flex-col h-full">
+  <aside id="sidebar" class="fixed md:static inset-y-0 left-0 z-40 -translate-x-full md:translate-x-0 w-[260px] shrink-0 bg-black text-white flex flex-col h-full">
     <div class="px-6 pt-8 pb-6">
-      <div class="flex items-center gap-2 mb-8">
-        <span class="italic text-2xl" style="font-family: Georgia, 'Times New Roman', serif;">Be</span>
-        <span class="text-[13px] font-extrabold tracking-widest uppercase leading-none">The<br/>People</span>
+      <div class="flex items-center justify-between mb-8">
+        <div class="flex items-center">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 150" width="180" height="52" role="img" aria-label="Be The People">
+            <style>
+              @import url('https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&amp;family=Oswald:wght@700&amp;display=swap');
+
+              .gothic-text {
+                font-family: 'UnifrakturMaguntia', 'Chaucer', 'Old English Text MT', serif;
+                font-size: 110px;
+                fill: #ffffff;
+                font-weight: bold;
+              }
+              .sans-text {
+                font-family: 'Oswald', 'Impact', 'Arial Black', sans-serif;
+                font-size: 58px;
+                font-weight: 700;
+                fill: #ffffff;
+                letter-spacing: 2px;
+              }
+            </style>
+
+            <g transform="translate(20, 20)">
+              <text x="15" y="96" class="gothic-text">Be</text>
+              <text x="180" y="86" class="sans-text">THE PEOPLE</text>
+            </g>
+          </svg>
+        </div>
+        <button onclick="closeSidebar()" aria-label="Close menu" class="md:hidden text-white/70 hover:text-white p-1 -mr-1">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+        </button>
       </div>
       <h1 class="text-[15px] font-extrabold uppercase tracking-tight leading-snug">
         Insights Platform Portal
@@ -78,15 +111,18 @@
     </div>
 
     <div class="flex-1"></div>
-
-    <div class="px-6 pb-6 flex items-center gap-2 text-[11px] text-[#8a8a8a]">
-      <span class="w-1.5 h-1.5 rounded-full bg-[#8a8a8a] inline-block"></span>
-      <span class="uppercase tracking-wide">Signed in &middot; Okta</span>
-    </div>
   </aside>
 
   <!-- ============ MAIN ============ -->
-  <main class="flex-1 h-full flex flex-col overflow-hidden">
+  <main class="flex-1 h-full flex flex-col overflow-hidden min-w-0">
+
+    <!-- mobile top bar with hamburger -->
+    <div class="md:hidden shrink-0 flex items-center gap-3 px-4 py-3 bg-black text-white">
+      <button onclick="openSidebar()" aria-label="Open menu" class="p-1 -ml-1">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
+      <span class="text-[13px] font-extrabold uppercase tracking-wide">Insights Platform Portal</span>
+    </div>
 
     <!-- Reports > General is a full-bleed seamless iframe, no chrome around it -->
     <div id="view-general" class="flex-1 min-h-0 frame-shell relative">
@@ -127,16 +163,6 @@
       { title: 'Followers', desc: 'Follower growth across all channels.', icon: 'bars' },
       { title: 'Paid Social', desc: 'Paid social spend, reach and conversions.', icon: 'line' },
       { title: 'Organic Social Posts', desc: 'Post-level organic performance.', icon: 'ring' },
-    ],
-    campaign: [
-      { title: 'Campaign Performance', desc: 'Reach, spend and conversions by campaign.', icon: 'bars' },
-      { title: 'Email Engagement', desc: 'Open, click and conversion rates.', icon: 'line' },
-      { title: 'Landing Pages', desc: 'Traffic and conversion by landing page.', icon: 'ring' },
-    ],
-    product: [
-      { title: 'Product Signups', desc: 'New product signups over time.', icon: 'bars' },
-      { title: 'Feature Adoption', desc: 'Usage trends across key features.', icon: 'line' },
-      { title: 'Retention', desc: 'Cohort retention and churn.', icon: 'ring' },
     ],
   };
 
@@ -192,8 +218,7 @@
 
   function setSection(section) {
     state.section = section;
-    document.getElementById('categories-block').classList.toggle('opacity-40', section !== 'reports');
-    document.getElementById('categories-block').classList.toggle('pointer-events-none', section !== 'reports');
+    document.getElementById('categories-block').classList.toggle('hidden', section !== 'reports');
     updateToggle();
     if (section === 'measures') {
       showChrome('BTP Insights Platform', 'Key Measures', renderMeasures());
@@ -210,10 +235,15 @@
     if (cat === 'general') {
       document.getElementById('view-general').classList.remove('hidden');
       document.getElementById('view-chrome').classList.add('hidden');
+    } else if (cat === 'campaign' || cat === 'product') {
+      document.getElementById('view-general').classList.add('hidden');
+      const title = cat === 'campaign' ? 'Campaign' : 'Product';
+      showChrome('BTP Insights Platform', title, '');
     } else {
       document.getElementById('view-general').classList.add('hidden');
       showChrome('BTP Insights Platform', 'Reports', renderReportCards(cat));
     }
+    if (window.innerWidth < 768) closeSidebar();
   }
 
   function showChrome(crumb, title, bodyHtml) {
@@ -222,6 +252,16 @@
     document.getElementById('crumb').textContent = crumb;
     document.getElementById('page-title').textContent = title;
     document.getElementById('page-body').innerHTML = bodyHtml;
+  }
+
+  function openSidebar() {
+    document.getElementById('sidebar').classList.remove('-translate-x-full');
+    document.getElementById('sidebar-overlay').classList.remove('hidden');
+  }
+
+  function closeSidebar() {
+    document.getElementById('sidebar').classList.add('-translate-x-full');
+    document.getElementById('sidebar-overlay').classList.add('hidden');
   }
 
   function updateToggle() {
