@@ -158,14 +158,14 @@
   };
 
   const measures = [
-    { label: 'Followers', value: 'Lorem Ipsum' },
-    { label: 'Reach', value: 'Lorem Ipsum' },
-    { label: 'Impressions', value: 'Lorem Ipsum' },
-    { label: 'Engagements', value: 'Lorem Ipsum' },
-    { label: 'Website Visits', value: 'Lorem Ipsum' },
-    { label: 'Newsletter Only Sign Ups', value: 'Lorem Ipsum' },
-    { label: 'Product Only Signups', value: 'Lorem Ipsum' },
-    { label: 'Total Users', value: 'Lorem Ipsum' },
+    { label: 'Followers', value: 'Total number of people currently following your account(s) across platforms.' },
+    { label: 'Reach', value: 'The number of unique people who saw your content.' },
+    { label: 'Impressions', value: 'The total number of times your content was displayed, regardless of clicks or unique viewers.' },
+    { label: 'Engagements', value: 'Total interactions with your content, including likes, comments, shares, and clicks.' },
+    { label: 'Website Visits', value: 'The number of sessions or visits recorded on your website.' },
+    { label: 'Newsletter Only Sign Ups', value: 'Users who signed up for the newsletter without creating a product account.' },
+    { label: 'Product Only Signups', value: 'Users who signed up for the product without subscribing to the newsletter.' },
+    { label: 'Total Users', value: 'The complete count of unique users across newsletter and product signups combined.' },
   ];
 
   function icon(name) {
@@ -197,8 +197,8 @@
     return `<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
       ${measures.map(m => `
         <div class="bg-white border border-black/10 rounded-md px-6 py-5">
-          <div class="font-focus text-[14px] font-bold uppercase tracking-widest text-black/40 mb-2">${m.label}</div>
-          <div class="font-large text-[30px] font-extrabold tracking-tight">${m.value}</div>
+          <div class="font-focus text-[14px] font-bold uppercase tracking-widest text-black mb-2">${m.label}</div>
+          <div class="font-focus text-[14px] font-normal text-black/55 leading-relaxed">${m.value}</div>
         </div>
       `).join('')}
     </div>`;
