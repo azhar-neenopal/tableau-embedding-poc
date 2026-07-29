@@ -158,14 +158,14 @@
   };
 
   const measures = [
-    { label: 'Followers', value: '312.4K', delta: '4.1K this week' },
-    { label: 'Reach', value: '8.4M', delta: '1.1M this week' },
-    { label: 'Impressions', value: '22.6M', delta: '3.2M this week' },
-    { label: 'Engagements', value: '1.1M', delta: '180K this week' },
-    { label: 'Website Visits', value: '48.9K', delta: '6.2K this week' },
-    { label: 'Newsletter Only Sign Ups', value: '6,210', delta: '420 this week' },
-    { label: 'Product Only Signups', value: '4,880', delta: '360 this week' },
-    { label: 'Total Users', value: '27,110', delta: '1,340 this week' },
+    { label: 'Followers', value: 'Lorem Ipsum' },
+    { label: 'Reach', value: 'Lorem Ipsum' },
+    { label: 'Impressions', value: 'Lorem Ipsum' },
+    { label: 'Engagements', value: 'Lorem Ipsum' },
+    { label: 'Website Visits', value: 'Lorem Ipsum' },
+    { label: 'Newsletter Only Sign Ups', value: 'Lorem Ipsum' },
+    { label: 'Product Only Signups', value: 'Lorem Ipsum' },
+    { label: 'Total Users', value: 'Lorem Ipsum' },
   ];
 
   function icon(name) {
@@ -197,11 +197,8 @@
     return `<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
       ${measures.map(m => `
         <div class="bg-white border border-black/10 rounded-md px-6 py-5">
-          <div class="font-focus text-[11px] font-bold uppercase tracking-widest text-black/40 mb-2">${m.label}</div>
-          <div class="font-focys text-[30px] font-extrabold tracking-tight mb-1">${m.value}</div>
-          <div class="font-copy text-[12px] text-black/45 flex items-center gap-1">
-            <span class="text-black/70">&#9650;</span> ${m.delta}
-          </div>
+          <div class="font-focus text-[14px] font-bold uppercase tracking-widest text-black/40 mb-2">${m.label}</div>
+          <div class="font-large text-[30px] font-extrabold tracking-tight">${m.value}</div>
         </div>
       `).join('')}
     </div>`;
