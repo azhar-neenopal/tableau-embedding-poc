@@ -128,7 +128,7 @@
 
         <div>
           <a href="#" onclick="selectCategory('social');return false;" data-cat="social" class="nav-item flex items-center justify-between pr-1">
-            <span>Social</span>
+            <span>Owned Channel Performance</span>
             <span id="social-chevron" class="inline-flex shrink-0">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="w-3.5 h-3.5"><polyline points="9 6 15 12 9 18"/></svg>
             </span>
@@ -137,7 +137,7 @@
           <div id="social-subnav" class="hidden mt-3 pl-3 ml-1 border-l border-white/10 flex flex-col gap-2.5"></div>
         </div>
 
-        <a href="#" onclick="selectCategory('campaign');return false;" data-cat="campaign" class="nav-item">Campaign</a>
+        <a href="#" onclick="selectCategory('campaign');return false;" data-cat="campaign" class="nav-item">Campaign &amp; Activation Artifacts</a>
         <a href="#" onclick="selectCategory('product');return false;" data-cat="product" class="nav-item">Product</a>
       </nav>
     </div>
@@ -205,17 +205,26 @@
   const state = { section: 'reports', category: 'general', socialOpen: false, activeSocialTab: null, viewMode: 'card' };
 
   // Design 6 = Design 5 with the Card/List switch reduced to icon-only buttons.
+  const webAnalyticsCard = { title: 'Web Analytics', icon: 'globe', href: 'https://prod-useast-a.online.tableau.com/t/standtogether/views/BeThePeopleSummaryDashboard_17767805755360/WebAnalytics/95f5f4d1-f817-4a26-82ff-f9c9c073d464/8e7a7f07-1f20-4b0a-aabe-bc8b2b00f050', desc: 'Analyzes site traffic, engagement, and conversion behavior across users, sessions, pageviews, scroll depth, landing pages, and top internal/external links.' };
+
   const socialDashboards = [
     {
-      name: 'Be The People Summary Dashboard',
+      name: 'BTP Owned Social Performance',
       cards: [
         { title: 'Followers', icon: 'users', href: 'https://prod-useast-a.online.tableau.com/t/standtogether/views/BeThePeopleSummaryDashboard_17767805755360/Followers/c25c1d3d-6f76-42f5-9302-36cfe7b2fe07/2509b308-8de9-4115-beb4-bc1ac4473b07', desc: 'Tracks total and net-new follower growth with 7-day, 30-day, and MTD trends across Instagram, TikTok, Facebook, Threads, YouTube, and LinkedIn.' },
         { title: 'Organic Social', icon: 'organic', href: 'https://prod-useast-a.online.tableau.com/t/standtogether/views/BeThePeopleSummaryDashboard_17767805755360/OrganicSocial/7ed5549e-f18c-4f94-ae91-c8f29cb00189/f29b731b-c37f-40ec-bdbd-5124f9210195', desc: 'Measures organic reach, impressions, engagement rate, video views, and post volume, with platform-level trends and post-by-post performance detail.' },
         { title: 'Paid Media', icon: 'dollar', href: 'https://prod-useast-a.online.tableau.com/t/standtogether/views/BeThePeopleSummaryDashboard_17767805755360/PaidMedia/8b3b0e1f-38cf-4fe1-bf3a-7603675ec835/ecd3c65e-0c6e-49a2-92f6-12f403f6e800', desc: 'Tracks ad performance (clicks, impressions, CTR, spend, CPC, CPM) with campaign-level trends, video completion funnels, and audience-filterable results.' },
-        { title: 'Web Analytics', icon: 'globe', href: 'https://prod-useast-a.online.tableau.com/t/standtogether/views/BeThePeopleSummaryDashboard_17767805755360/WebAnalytics/95f5f4d1-f817-4a26-82ff-f9c9c073d464/8e7a7f07-1f20-4b0a-aabe-bc8b2b00f050', desc: 'Analyzes site traffic, engagement, and conversion behavior across users, sessions, pageviews, scroll depth, landing pages, and top internal/external links.' },
         { title: 'Email Tab', icon: 'mail', href: 'https://prod-useast-a.online.tableau.com/t/standtogether/views/BeThePeopleSummaryDashboard_17767805755360/WebAnalytics/95f5f4d1-f817-4a26-82ff-f9c9c073d464/8e7a7f07-1f20-4b0a-aabe-bc8b2b00f050', desc: 'Monitors email campaign performance from delivery through opens and clicks, including link-level engagement for each campaign.' },
-        { title: 'Signups', icon: 'userplus', href: 'https://prod-useast-a.online.tableau.com/t/standtogether/views/BeThePeopleSummaryDashboard_17767805755360/Signups/ea6defa6-8ea1-4a9d-b707-454968cbd0d8/924e5601-8537-438d-b587-c96205708e0c', desc: 'Tracks the signup funnel from total to unique signups to account creation, broken down by platform, source, and form.' },
-        { title: 'Content Drilldown', icon: 'layers', href: 'https://prod-useast-a.online.tableau.com/t/standtogether/views/BeThePeopleSummaryDashboard_17767805755360/ContentDrilldown/528c0d1d-3f84-4758-8f4b-6045029be125/b92cd0de-4253-49fb-8e23-91c82814cd48', desc: 'Compares paid and organic content performance across web, social, and ad metrics at the content, channel, and post-type level.' },
+      ],
+    },
+    {
+      name: 'BTP Website Performance',
+      cards: [ webAnalyticsCard ],
+    },
+    {
+      name: 'GBU: Social Influencer Performance',
+      cards: [
+        { title: 'Social Influencer Performance', icon: 'radio', href: 'https://stand-together.creatoriq.com/report/btp_gotta_be_us_-jMdioKUdh1o4', desc: 'CreatorIQ report tracking influencer content, reach, and engagement for the Gotta Be Us influencer program.' },
       ],
     },
     {
@@ -227,10 +236,16 @@
     },
   ];
 
+  const productCards = [
+    webAnalyticsCard,
+    { title: 'Event Performance', icon: 'userplus', href: 'https://prod-useast-a.online.tableau.com/t/standtogether/views/BeThePeopleSummaryDashboard_17767805755360/Signups/ea6defa6-8ea1-4a9d-b707-454968cbd0d8/924e5601-8537-438d-b587-c96205708e0c', desc: 'Tracks the signup funnel from total to unique signups to account creation, broken down by platform, source, and form.' },
+    { title: 'Content Drilldown', icon: 'layers', href: 'https://prod-useast-a.online.tableau.com/t/standtogether/views/BeThePeopleSummaryDashboard_17767805755360/ContentDrilldown/528c0d1d-3f84-4758-8f4b-6045029be125/b92cd0de-4253-49fb-8e23-91c82814cd48', desc: 'Compares paid and organic content performance across web, social, and ad metrics at the content, channel, and post-type level.' },
+  ];
+
   const measures = [
     { label: 'Followers', value: 'Total number of people currently following your account(s) across platforms.' },
-    { label: 'Reach', value: 'The number of unique people who saw your content.' },
-    { label: 'Impressions', value: 'The total number of times your content was displayed, regardless of clicks or unique viewers.' },
+    { label: 'Reach', value: 'The number of unique people who saw your content.', href: 'https://prod-useast-a.online.tableau.com/pulse/site/standtogether/metrics/d8bde2bc-ff68-4fb3-9c41-253e1c5900c1' },
+    { label: 'Impressions', value: 'The total number of times your content was displayed, regardless of clicks or unique viewers.', href: 'https://prod-useast-a.online.tableau.com/pulse/site/standtogether/metrics/a5bcc9d5-2d07-47b3-90e4-7571ccf77835' },
     { label: 'Engagements', value: 'Total interactions with your content, including likes, comments, shares, and clicks.' },
     { label: 'Website Visits', value: 'The number of sessions or visits recorded on your website.' },
     { label: 'Newsletter Only Sign Ups', value: 'Users who signed up for the newsletter without creating a product account.' },
@@ -267,10 +282,9 @@
   }
 
   // Card view — same card language as Design 1 / 4.
-  function renderSocialCards(dashIndex) {
-    const dash = socialDashboards[dashIndex];
+  function renderCardGrid(cards) {
     return `<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-      ${dash.cards.map(c => `
+      ${cards.map(c => `
         <a href="${c.href}" target="_blank" rel="noopener" class="social-card group block bg-white border border-black/10 rounded-md overflow-hidden">
           <div class="px-6 pt-6 pb-2">${icon(c.icon)}</div>
           <div class="px-5 py-4 border-t border-black/10">
@@ -286,10 +300,9 @@
   }
 
   // List view — same row language as Design 2.
-  function renderSocialList(dashIndex) {
-    const dash = socialDashboards[dashIndex];
+  function renderCardList(cards) {
     return `<div class="bg-white border border-black/10 rounded-md overflow-hidden">
-      ${dash.cards.map(c => `
+      ${cards.map(c => `
         <a href="${c.href}" target="_blank" rel="noopener" class="social-row group flex items-center gap-4 px-5 py-4 border-b border-black/10 last:border-b-0">
           <div class="shrink-0 w-20 h-14 rounded-md bg-black/[0.03] border border-black/10 p-2">${icon(c.icon, 'w-full h-full')}</div>
           <div class="flex-1 min-w-0">
@@ -323,12 +336,17 @@
 
   function renderMeasures() {
     return `<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-      ${measures.map(m => `
-        <div class="bg-white border border-black/10 rounded-md px-6 py-5">
+      ${measures.map(m => {
+        const tag = m.href ? 'a' : 'div';
+        const linkAttrs = m.href ? `href="${m.href}" target="_blank" rel="noopener" class="social-card group block bg-white border border-black/10 rounded-md px-6 py-5"` : 'class="bg-white border border-black/10 rounded-md px-6 py-5"';
+        return `
+        <${tag} ${linkAttrs}>
           <div class="font-focus text-[14px] font-bold uppercase tracking-widest text-black mb-2">${m.label}</div>
-          <div class="font-focus text-[14px] font-normal text-black/55 leading-relaxed">${m.value}</div>
-        </div>
-      `).join('')}
+          <div class="font-focus text-[14px] font-normal text-black/55 leading-relaxed${m.href ? ' mb-3' : ''}">${m.value}</div>
+          ${m.href ? `<div class="font-focus text-[11px] font-bold uppercase tracking-widest text-black/70 group-hover:text-black flex items-center gap-1.5">View in Tableau Pulse <span class="cta-arrow">&rarr;</span></div>` : ''}
+        </${tag}>
+      `;
+      }).join('')}
     </div>`;
   }
 
@@ -358,14 +376,17 @@
       document.getElementById('view-general').classList.add('hidden');
       const idx = state.activeSocialTab ?? 0;
       const dash = socialDashboards[idx];
-      const body = state.viewMode === 'list' ? renderSocialList(idx) : renderSocialCards(idx);
+      const body = state.viewMode === 'list' ? renderCardList(dash.cards) : renderCardGrid(dash.cards);
       showChrome('BTP Insights Platform', dash.name, body);
       document.getElementById('view-toggle').classList.remove('hidden');
       updateViewToggle();
+    } else if (cat === 'product') {
+      document.getElementById('view-general').classList.add('hidden');
+      showChrome('BTP Insights Platform', 'Product', renderCardGrid(productCards));
+      document.getElementById('view-toggle').classList.add('hidden');
     } else {
       document.getElementById('view-general').classList.add('hidden');
-      const title = cat === 'campaign' ? 'Campaign' : 'Product';
-      showChrome('BTP Insights Platform', title, '');
+      showChrome('BTP Insights Platform', 'Campaign & Activation Artifacts', '');
       document.getElementById('view-toggle').classList.add('hidden');
     }
   }
