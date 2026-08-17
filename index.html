@@ -236,6 +236,10 @@
     },
   ];
 
+  const campaignCards = [
+    { title: 'Measurement Plan & Campaign Artifacts', icon: 'briefcase', href: 'https://thecss.sharepoint.com/:f:/r/sites/A250/Shared%20Documents/BTP%20Activations%20and%20Measurement/BTP%20Activations_Measurement%20Plans,%20Social%20Listening,%20%26%20Assets?d=w81b7519e6c634a06986f312d812e6f1a&csf=1&web=1&e=ykM7I8&xsdata=MDV8MDJ8fGJmMTMwYzcwNDE5MDQ1ODA5YTBiMDhkZWY5NDM5NDI4fGY2ZGE3MmIwNzk3NzRiMDliZGZjZDM4YjJhYTU2ZDRjfDB8MHw2MzkyMjIyNjU3NzcwMDMwMTl8VW5rbm93bnxWR1ZoYlhOVFpXTjFjbWwwZVZObGNuWnBZMlY4ZXlKRFFTSTZJbFJsWVcxelgwRlVVRk5sY25acFkyVmZVMUJQVEU5R0lpd2lWaUk2SWpBdU1DNHdNREF3SWl3aVVDSTZJbGRwYmpNeUlpd2lRVTRpT2lKUGRHaGxjaUlzSWxkVUlqb3hNWDA9fDF8TDJOb1lYUnpMekU1T2pBelpUVmxNVE01TFRsbU9Ua3RORGcwTnkxaE1qZzJMV0ZtTkROak1UUTVZbVZqT0Y4Mk1qUTBNRE0zTWkxbVkyUmxMVFEzT0RJdE9EQTFOUzFoTlRrM05EQTVOamt6TVRGQWRXNXhMbWRpYkM1emNHRmpaWE12YldWemMyRm5aWE12TVRjNE5qWXlPVGMzTkRrMU1nPT18M2M3NDFlMmY4NjIzNDQ0OTlhMGIwOGRlZjk0Mzk0Mjh8MjM4ZTBiMDk2Mjg3NDNlMDg4MjFlYWU0YWYyZDdiN2Q%3D&sdata=c09HMU4xRTlzbk5TU3ArY1daQ1BSeXBOSlFyTXpDVmVtc0tKb0p4SEQ1dz0%3D&ovuser=f6da72b0-7977-4b09-bdfc-d38b2aa56d4c%2CDParashar%40standtogether.org', desc: 'SharePoint folder with BTP activation and measurement plans, social listening, and related campaign assets.', cta: 'Open Folder' },
+  ];
+
   const productCards = [
     webAnalyticsCard,
     { title: 'Event Performance', icon: 'userplus', href: 'https://prod-useast-a.online.tableau.com/t/standtogether/views/BeThePeopleSummaryDashboard_17767805755360/Signups/ea6defa6-8ea1-4a9d-b707-454968cbd0d8/924e5601-8537-438d-b587-c96205708e0c', desc: 'Tracks the signup funnel from total to unique signups to account creation, broken down by platform, source, and form.' },
@@ -291,7 +295,7 @@
             <div class="font-focus text-[14px] font-extrabold uppercase tracking-wide mb-1">${c.title}</div>
             <div class="font-copy text-[13px] text-black/55 leading-relaxed mb-3">${c.desc}</div>
             <div class="mt-auto pt-1 font-focus text-[11px] font-bold uppercase tracking-widest text-black/70 group-hover:text-black flex items-center gap-1.5">
-              View Dashboard <span class="cta-arrow">&rarr;</span>
+              ${c.cta || 'View Dashboard'} <span class="cta-arrow">&rarr;</span>
             </div>
           </div>
         </a>
@@ -389,7 +393,7 @@
       document.getElementById('view-toggle').classList.add('hidden');
     } else {
       document.getElementById('view-general').classList.add('hidden');
-      showChrome('BTP Insights Platform', 'Campaign & Activation Artifacts', '');
+      showChrome('BTP Insights Platform', 'Campaign & Activation Artifacts', renderCardGrid(campaignCards));
       document.getElementById('view-toggle').classList.add('hidden');
     }
   }
